@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useUser } from '../lib/loginState';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 const NavigationStyles = styled.div`
     display: flex;
@@ -39,6 +41,7 @@ const NavigationStyles = styled.div`
         }
         &.logo {
             font-size: 2rem;
+            width: 15rem;
         }
     }
 `;
@@ -65,24 +68,41 @@ export const ButtonStyles = styled.button`
 
 export default function Navigation() {
     const { loggedIn, setLoggedIn } = useUser();
+    const router = useRouter();
 
     return (
         <NavigationStyles>
             <div className="section pages">
                 <div className="item">
                     <Link href="/">
-                        <a className="link logo">Navbar</a>
+                        <a className="link logo">
+                            <Image src="/logo.png" alt="logo" layout="fill" />
+                        </a>
                     </Link>
                 </div>
                 <div className="item">
                     <Link href="/">
-                        <a className="link">Home</a>
+                        <a
+                            className={`link ${
+                                router.pathname === '/' ? 'active' : ''
+                            }`}
+                        >
+                            Home
+                        </a>
                     </Link>
                 </div>
                 {loggedIn && (
                     <div className="item">
                         <Link href="/profile">
-                            <a className="link">Profile</a>
+                            <a
+                                className={`link ${
+                                    router.pathname === '/profile'
+                                        ? 'active'
+                                        : ''
+                                }`}
+                            >
+                                Profile
+                            </a>
                         </Link>
                     </div>
                 )}
