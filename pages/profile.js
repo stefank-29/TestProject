@@ -42,8 +42,6 @@ const ProfileStyles = styled.div`
     }
 `;
 
-// const ButtonStyles = styled.button``;
-
 export default function Profile() {
     const { loggedIn, setLoggedIn } = useUser();
     const [user, setUser] = useState({
@@ -55,11 +53,11 @@ export default function Profile() {
 
     const [isToggled, setIsToggled] = useState(false);
 
-    useEffect(() => {
-        if (!loggedIn) {
-            Router.replace('/');
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (!loggedIn) {
+    //         Router.replace('/');
+    //     }
+    // }, []);
     if (!loggedIn) return null;
     return (
         <ProfileStyles>
