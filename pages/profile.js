@@ -27,12 +27,13 @@ const ProfileStyles = styled.div`
             display: flex;
             flex-direction: column;
             margin-left: 5rem;
+            font-size: 1.8rem;
             > * {
                 margin-bottom: 2rem;
             }
             .name {
                 font-weight: bold;
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
         }
     }
@@ -52,6 +53,8 @@ export default function Profile() {
         image: '/profileimage.jpg',
     });
 
+    const [isToggled, setIsToggled] = useState(false);
+
     useEffect(() => {
         if (!loggedIn) {
             Router.replace('/');
@@ -62,13 +65,20 @@ export default function Profile() {
         <ProfileStyles>
             <h1>Profile info</h1>
             <div className="details">
-                <div className="image">
-                    <Image
-                        src="/profileImage.jpg"
-                        layout="fill"
-                        alt="profile image"
+                {!isToggled ? (
+                    <div className="image">
+                        <Image
+                            src="/profileImage.jpg"
+                            layout="fill"
+                            alt="profile image"
+                        />
+                    </div>
+                ) : (
+                    <img
+                        className="image"
+                        src={`https://api.hello-avatar.com/adorables/285/${user.email}`}
                     />
-                </div>
+                )}
                 <div className="info">
                     <div className="name">{user.name}</div>
                     <div className="email">
@@ -82,7 +92,12 @@ export default function Profile() {
                     </div>
                 </div>
             </div>
-            <ButtonStyles className="toggleBtn">Toggle Avatar</ButtonStyles>
+            <ButtonStyles
+                className="toggleBtn"
+                onClick={() => setIsToggled(!isToggled)}
+            >
+                Toggle Avatar
+            </ButtonStyles>
         </ProfileStyles>
     );
 }
