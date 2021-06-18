@@ -1,7 +1,27 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 // const ws = require('ws');
+
+const TableStyles = styled.div`
+    display: grid;
+    background-color: white;
+    grid-template-columns: minmax(70px, 100px) 2fr 3fr 3fr 3fr;
+    border-top: 1px solid var(--darkblue);
+    border-right: 1px solid var(--darkblue);
+    margin: 5rem 2rem;
+
+    .cell {
+        padding: 2rem 2rem;
+        border-left: 1px solid var(--darkblue);
+        border-bottom: 1px solid var(--darkblue);
+        &.header {
+            font-size: 1.7rem;
+            font-weight: bold;
+        }
+    }
+`;
 
 export default function Home() {
     const [currencies, setCurrencies] = useState([]);
@@ -31,12 +51,22 @@ export default function Home() {
                         { symbol: response.symbol, chanId: response.chanId },
                     ]);
                 } else {
-                    // setCurrencies(
-                    //     [...currencies].map((curr) => {
-                    //         if (curr.chanId === response[0]) {
-                    //         }
-                    //     })
-                    // );
+                    let details = response[1];
+                    if (response[1] == 'hb') return;
+                    setCurrencies((currencies) =>
+                        [...currencies].map((curr) => {
+                            if (curr?.chanId === response[0]) {
+                                return {
+                                    ...curr,
+                                    daily: details[5],
+                                    volume: details[7],
+                                    lastPrice: details[6],
+                                };
+                            } else {
+                                return curr;
+                            }
+                        })
+                    );
                 }
             };
 
@@ -50,6 +80,8 @@ export default function Home() {
             }
         };
     }, []);
+
+    if (currencies.length < 5) return <p>Loading...</p>;
     return (
         <div>
             <Head>
@@ -60,7 +92,23 @@ export default function Home() {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <pre>{JSON.stringify(currencies)}</pre>
+            {/* <pre>{JSON.stringify(currencies)}</pre> */}
+            <TableStyles>
+                <span className="cell header">#</span>
+                <span className="cell header">Symbol</span>
+                <span className="cell header">Daily change</span>
+                <span className="cell header">Volume</span>
+                <span className="cell header">Last price</span>
+                {currencies.map((curr, index) => (
+                    <>
+                        <span className="cell">{index + 1}</span>
+                        <span className="cell">{curr.symbol}</span>
+                        <span className="cell">{`${curr.daily}%`}</span>
+                        <span className="cell">{curr.volume}</span>
+                        <span className="cell">{curr.lastPrice}</span>
+                    </>
+                ))}
+            </TableStyles>
         </div>
     );
 }
