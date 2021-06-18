@@ -1,5 +1,6 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
+import Navigation from './Navigation';
 
 const GlobalStyles = createGlobalStyle`
     html{
@@ -10,6 +11,7 @@ const GlobalStyles = createGlobalStyle`
         --black: #393939;
         --grey: #3A3A3A;
         --lightblue: #BDC5E4;
+        --darkblue: #1a1c6b;
         --hoverBlue: #5c6fbc;
         --purple: #262161;
         --yellow: #ffc40e;
@@ -61,6 +63,7 @@ export default function Page({ children }) {
     return (
         <div>
             <GlobalStyles />
+            <Navigation />
             <InnerStyles>{children}</InnerStyles>
         </div>
     );

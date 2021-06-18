@@ -1,4 +1,6 @@
 import Router from 'next/router';
+import NProgress from 'nprogress';
+
 import Page from '../components/Page';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
