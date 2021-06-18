@@ -43,7 +43,7 @@ const NavigationStyles = styled.div`
     }
 `;
 
-const ButtonStyles = styled.button`
+export const ButtonStyles = styled.button`
     position: relative;
     display: flex;
     align-items: center;
