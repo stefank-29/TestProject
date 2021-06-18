@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import styled from 'styled-components';
 // const ws = require('ws');
 
@@ -10,7 +10,7 @@ const TableStyles = styled.div`
     grid-template-columns: minmax(70px, 100px) 2fr 3fr 3fr 3fr;
     border-top: 1px solid var(--darkblue);
     border-right: 1px solid var(--darkblue);
-    margin: 5rem 2rem;
+    margin: 5rem 0;
 
     .cell {
         padding: 2rem 2rem;
@@ -81,7 +81,7 @@ export default function Home() {
         };
     }, []);
 
-    if (currencies.length < 5) return <p>Loading...</p>;
+    // if (currencies.length < 5) return <p>Loading...</p>;
     return (
         <div>
             <Head>
@@ -93,22 +93,31 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             {/* <pre>{JSON.stringify(currencies)}</pre> */}
-            <TableStyles>
-                <span className="cell header">#</span>
-                <span className="cell header">Symbol</span>
-                <span className="cell header">Daily change</span>
-                <span className="cell header">Volume</span>
-                <span className="cell header">Last price</span>
-                {currencies.map((curr, index) => (
-                    <>
-                        <span className="cell">{index + 1}</span>
-                        <span className="cell">{curr.symbol}</span>
-                        <span className="cell">{`${curr.daily}%`}</span>
-                        <span className="cell">{curr.volume}</span>
-                        <span className="cell">{curr.lastPrice}</span>
-                    </>
-                ))}
-            </TableStyles>
+            <h1>REALTIME MARKETS OVERVIEW</h1>
+            {currencies.length == 5 ? (
+                <TableStyles>
+                    <span className="cell header">#</span>
+                    <span className="cell header">Symbol</span>
+                    <span className="cell header">Daily change</span>
+                    <span className="cell header">Volume</span>
+                    <span className="cell header">Last price</span>
+                    {currencies.map((curr, index) => (
+                        <Fragment key={index}>
+                            <span className="cell">{index + 1}</span>
+                            <span className="cell">{curr.symbol.slice(1)}</span>
+                            <span className="cell">{`${(
+                                curr?.daily * 100
+                            ).toFixed(2)}%`}</span>
+                            <span className="cell">{curr.volume}</span>
+                            <span className="cell">
+                                {+curr?.lastPrice?.toFixed(2)}
+                            </span>
+                        </Fragment>
+                    ))}
+                </TableStyles>
+            ) : (
+                <h3>Loading...</h3>
+            )}
         </div>
     );
 }

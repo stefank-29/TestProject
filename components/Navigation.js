@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import Link from 'next/link';
+import { useUser } from '../lib/loginState';
 
 const NavigationStyles = styled.div`
     display: flex;
@@ -63,6 +64,8 @@ const ButtonStyles = styled.button`
 `;
 
 export default function Navigation() {
+    const { loggedIn, setLoggedIn } = useUser();
+
     return (
         <NavigationStyles>
             <div className="section pages">
@@ -76,16 +79,20 @@ export default function Navigation() {
                         <a className="link">Home</a>
                     </Link>
                 </div>
-                <div className="item">
-                    <Link href="/profile">
-                        <a className="link">Profile</a>
-                    </Link>
-                </div>
+                {loggedIn && (
+                    <div className="item">
+                        <Link href="/profile">
+                            <a className="link">Profile</a>
+                        </Link>
+                    </div>
+                )}
             </div>
             <div className="section login">
-                <div className="item">
-                    <ButtonStyles>Login</ButtonStyles>
-                </div>
+                {!loggedIn && (
+                    <div className="item" onClick={() => setLoggedIn(true)}>
+                        <ButtonStyles>Login</ButtonStyles>
+                    </div>
+                )}
             </div>
         </NavigationStyles>
     );
