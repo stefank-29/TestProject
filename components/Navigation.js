@@ -36,6 +36,29 @@ const NavigationStyles = styled.div`
             background: dodgerblue fixed;
             text-decoration: underline;
         }
+        &.logo {
+            font-size: 2rem;
+        }
+    }
+`;
+
+const ButtonStyles = styled.button`
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    margin: 0 2rem;
+    padding: 1.2rem 2rem 1rem;
+    background-color: dodgerblue;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    :hover {
+        background-color: #4286ed;
     }
 `;
 
@@ -59,7 +82,11 @@ export default function Navigation() {
                     </Link>
                 </div>
             </div>
-            <div className="section login"></div>
+            <div className="section login">
+                <div className="item">
+                    <ButtonStyles>Login</ButtonStyles>
+                </div>
+            </div>
         </NavigationStyles>
     );
 }

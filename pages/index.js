@@ -1,7 +1,51 @@
 import Head from 'next/head';
 import Image from 'next/image';
+import { useEffect } from 'react';
+// const ws = require('ws');
 
 export default function Home() {
+    // TODO state za valute
+
+    useEffect(() => {
+        //const wss = new WebSocket('wss://api-pub.bitfinex.com/ws/2');
+
+        let pairs = ['tBTCUSD', 'tBTCEUR', 'tETHUSD', 'tETHEUR', 'tEOSUSD'];
+
+        pairs.forEach((pair) => {
+            const wss = new WebSocket('wss://api-pub.bitfinex.com/ws/2');
+
+            let msg = JSON.stringify({
+                event: 'subscribe',
+                channel: 'ticker',
+                symbol: pair, // BTCUSD, BTCEUR, ETHUSD, ETHEUR, EOSUSD
+            });
+
+            wss.onmessage = (msg) => {
+                // console.log(msg.data);
+                let response = JSON.parse(msg.data);
+                console.log(response);
+            };
+
+            wss.onopen = () => {
+                wss.send(msg);
+            };
+        });
+
+        // let msg = JSON.stringify({
+        //     event: 'subscribe',
+        //     channel: 'ticker',
+        //     symbol: 'tBTCUSD', // BTCUSD, BTCEUR, ETHUSD, ETHEUR, EOSUSD
+        // });
+        // wss.onmessage = (msg) => {
+        //     // console.log(msg.data);
+        //     let response = JSON.parse(msg.data);
+        //     console.log(response);
+        // };
+        // wss.onopen = () => {
+        //     // API keys setup here (See "Authenticated Channels")
+        //     wss.send(msg);
+        // };
+    }, []);
     return (
         <div>
             <Head>

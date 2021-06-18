@@ -54,7 +54,7 @@ const GlobalStyles = createGlobalStyle`
 
 const InnerStyles = styled.div`
     margin: 0 auto;
-    min-height: calc(100vh - 70px);
+    min-height: calc(100vh - 80px);
     max-width: 1200px;
     padding: 3rem 0;
 `;
