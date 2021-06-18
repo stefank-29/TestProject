@@ -1,10 +1,9 @@
 import { useUser } from '../lib/loginState';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Router from 'next/router';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { ButtonStyles } from '../components/Navigation';
-import { useState } from 'react/cjs/react.development';
 
 const ProfileStyles = styled.div`
     width: 100%;
@@ -53,11 +52,11 @@ export default function Profile() {
 
     const [isToggled, setIsToggled] = useState(false);
 
-    // useEffect(() => {
-    //     if (!loggedIn) {
-    //         Router.replace('/');
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (!loggedIn) {
+            Router.replace('/');
+        }
+    }, []);
     if (!loggedIn) return null;
     return (
         <ProfileStyles>
