@@ -8,17 +8,9 @@ export default function Home() {
 
     useEffect(() => {
         let pairs = ['tBTCUSD', 'tBTCEUR', 'tETHUSD', 'tETHEUR', 'tEOSUSD'];
-        setCurrencies([
-            { symbol: 'BTCUSD' },
-            { symbol: 'BTCEUR' },
-            { symbol: 'ETHUSD' },
-            { symbol: 'ETHEUR' },
-            { symbol: 'EOSUSD' },
-        ]);
         let connections = [];
-        //let wss = new WebSocket('wss://api-pub.bitfinex.com/ws/2');
+
         pairs.forEach((pair) => {
-            //  wss = new WebSocket('wss://api-pub.bitfinex.com/ws/2');
             let wss = new WebSocket('wss://api-pub.bitfinex.com/ws/2');
             connections.push(wss);
             let msg = JSON.stringify({
@@ -30,6 +22,22 @@ export default function Home() {
             wss.onmessage = (msg) => {
                 let response = JSON.parse(msg.data);
                 console.log(response);
+                if (response.event === 'info') {
+                    return;
+                }
+                if (response.event === 'subscribed') {
+                    setCurrencies((currencies) => [
+                        ...currencies,
+                        { symbol: response.symbol, chanId: response.chanId },
+                    ]);
+                } else {
+                    // setCurrencies(
+                    //     [...currencies].map((curr) => {
+                    //         if (curr.chanId === response[0]) {
+                    //         }
+                    //     })
+                    // );
+                }
             };
 
             wss.onopen = () => {
