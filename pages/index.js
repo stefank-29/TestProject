@@ -1,27 +1,33 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // const ws = require('ws');
 
 export default function Home() {
-    // TODO state za valute
+    const [currencies, setCurrencies] = useState([]);
 
     useEffect(() => {
-        //const wss = new WebSocket('wss://api-pub.bitfinex.com/ws/2');
-
         let pairs = ['tBTCUSD', 'tBTCEUR', 'tETHUSD', 'tETHEUR', 'tEOSUSD'];
-
+        setCurrencies([
+            { symbol: 'BTCUSD' },
+            { symbol: 'BTCEUR' },
+            { symbol: 'ETHUSD' },
+            { symbol: 'ETHEUR' },
+            { symbol: 'EOSUSD' },
+        ]);
+        let connections = [];
+        //let wss = new WebSocket('wss://api-pub.bitfinex.com/ws/2');
         pairs.forEach((pair) => {
-            const wss = new WebSocket('wss://api-pub.bitfinex.com/ws/2');
-
+            //  wss = new WebSocket('wss://api-pub.bitfinex.com/ws/2');
+            let wss = new WebSocket('wss://api-pub.bitfinex.com/ws/2');
+            connections.push(wss);
             let msg = JSON.stringify({
                 event: 'subscribe',
                 channel: 'ticker',
-                symbol: pair, // BTCUSD, BTCEUR, ETHUSD, ETHEUR, EOSUSD
+                symbol: pair,
             });
 
             wss.onmessage = (msg) => {
-                // console.log(msg.data);
                 let response = JSON.parse(msg.data);
                 console.log(response);
             };
@@ -30,21 +36,11 @@ export default function Home() {
                 wss.send(msg);
             };
         });
-
-        // let msg = JSON.stringify({
-        //     event: 'subscribe',
-        //     channel: 'ticker',
-        //     symbol: 'tBTCUSD', // BTCUSD, BTCEUR, ETHUSD, ETHEUR, EOSUSD
-        // });
-        // wss.onmessage = (msg) => {
-        //     // console.log(msg.data);
-        //     let response = JSON.parse(msg.data);
-        //     console.log(response);
-        // };
-        // wss.onopen = () => {
-        //     // API keys setup here (See "Authenticated Channels")
-        //     wss.send(msg);
-        // };
+        return () => {
+            for (let i = 0; i < connections.length; i++) {
+                connections[i].close();
+            }
+        };
     }, []);
     return (
         <div>
@@ -56,6 +52,7 @@ export default function Home() {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+            <pre>{JSON.stringify(currencies)}</pre>
         </div>
     );
 }
