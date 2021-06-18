@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect, useState, Fragment } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
 // const ws = require('ws');
 
@@ -13,12 +14,35 @@ const TableStyles = styled.div`
     margin: 5rem 0;
 
     .cell {
+        position: relative;
+        overflow: hidden;
         padding: 2rem 2rem;
         border-left: 1px solid var(--darkblue);
         border-bottom: 1px solid var(--darkblue);
         &.header {
             font-size: 1.7rem;
             font-weight: bold;
+        }
+        span {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .cell-enter {
+        transition: all 2s;
+        &.cell-enter-active {
+            background-color: lightblue;
+        }
+    }
+
+    .cell-exit {
+        transform: translateY(0);
+        transition: all 2s;
+        position: absolute;
+        left: 2rem;
+        &.cell-exit-active {
+            transform: translateY(-100%);
         }
     }
 `;
@@ -92,7 +116,6 @@ export default function Home() {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {/* <pre>{JSON.stringify(currencies)}</pre> */}
             <h1>REALTIME MARKETS OVERVIEW</h1>
             {currencies.length == 5 ? (
                 <TableStyles>
@@ -105,13 +128,40 @@ export default function Home() {
                         <Fragment key={index}>
                             <span className="cell">{index + 1}</span>
                             <span className="cell">{curr.symbol.slice(1)}</span>
-                            <span className="cell">{`${(
-                                curr?.daily * 100
-                            ).toFixed(2)}%`}</span>
-                            <span className="cell">{curr.volume}</span>
-                            <span className="cell">
-                                {+curr?.lastPrice?.toFixed(2)}
-                            </span>
+                            <TransitionGroup component="span" className="cell">
+                                <CSSTransition
+                                    key={curr.daily}
+                                    timeout={{ enter: 2000, exit: 2000 }}
+                                    classNames="cell"
+                                >
+                                    <span className="cell-value">{`${(
+                                        curr?.daily * 100
+                                    ).toFixed(2)}%`}</span>
+                                </CSSTransition>
+                            </TransitionGroup>
+                            <TransitionGroup component="span" className="cell">
+                                <CSSTransition
+                                    key={curr.volume}
+                                    timeout={{ enter: 2000, exit: 2000 }}
+                                    classNames="cell"
+                                >
+                                    <span className="cell-value">
+                                        {curr.volume}
+                                    </span>
+                                </CSSTransition>
+                            </TransitionGroup>
+                            <TransitionGroup component="span" className="cell">
+                                <CSSTransition
+                                    key={curr.lastPrice}
+                                    timeout={{ enter: 2000, exit: 2000 }}
+                                    classNames="cell"
+                                >
+                                    <span className="cell-value">
+                                        {' '}
+                                        {+curr?.lastPrice?.toFixed(2)}
+                                    </span>
+                                </CSSTransition>
+                            </TransitionGroup>
                         </Fragment>
                     ))}
                 </TableStyles>
